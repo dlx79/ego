@@ -93,7 +93,9 @@ def search():
         # ilike不区分大小写
         search=ProjectModel.query.filter(
             or_(ProjectModel.title.ilike(f"%{content}%") if content is not None else text(""),
-            ProjectModel.sellPoint.ilike(f"%{content}%") if content is not None else text(""))
+            ProjectModel.sellPoint.ilike(f"%{content}%") if content is not None else text(""),
+            ProjectModel.id.like(f"%{content}%") if content is not None else text("")
+            )
         )
         if search:
             search_list=dict()
@@ -113,7 +115,9 @@ def search():
 def delete():
     if request.method =='GET':
         id=request.args.get('id')
-        delete_id=ProjectModel.query.filter_by(id=id).delete()
+        delete_id=ProjectModel.query.filter_by(id=id).first()
+        db.session.delete(delete_id)
+        db.session.commit()
         if delete_id:
             return response(200,f'数据{id}删除成功')
         else:
