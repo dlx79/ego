@@ -125,5 +125,18 @@ def delete():
     else:
         return response(500,'请求方法不对')
 
+# 商品预查询
+@bp_prod.route('api/backend/item/preSearchTbItem',methods=['GET'])
+def preSearchTbItem():
+    if request.method =='GET':
+        id=request.args.get('id')
+        _id=ProjectModel.query.filter_by(id=id).first()
+        print(_id)
+        if _id:
+            return response(200,f'数据预查询成功{id}')
+        else:
+            return response(401,f'数据预查询失败{id}')
+    else:
+        return response(500,'请求方式错误')
 
 
